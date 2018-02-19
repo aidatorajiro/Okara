@@ -10,7 +10,7 @@ import torch.optim as optim
 import os
 from PIL import Image
 
-base = "res50_rensou_out_4"
+base = "res50_rensou_out_3"
 
 try:
   os.mkdir(base)
@@ -28,6 +28,9 @@ preprocess = transforms.Compose([
   transforms.ToTensor()
 ])
 
+im = preprocess(Image.open("./data/test1.jpg"))
+im.unsqueeze_(0)
+
 def runmodel(input):
   x = model.conv1(input)
   x = model.bn1(x)
@@ -39,9 +42,9 @@ def runmodel(input):
 
 model.eval() # turn to test mode
 
-input = nn.Parameter(torch.rand(1, 3, 224, 224))
+input = nn.Parameter(torch.rand(3, 224, 224))
 
-optimizer = optim.Adagrad([input], lr=0.1)
+optimizer = optim.LBFGS([input])
 loss_fn = nn.CrossEntropyLoss()
 
 for i in range(0, 100):

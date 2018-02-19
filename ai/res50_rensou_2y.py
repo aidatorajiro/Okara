@@ -10,7 +10,7 @@ import torch.optim as optim
 import os
 from PIL import Image
 
-base = "res50_rensou_out_4"
+base = "res50_rensou_out_2y"
 
 try:
   os.mkdir(base)
@@ -22,12 +22,6 @@ os.environ["TORCH_MODEL_ZOO"] = "./data"
 model = models.resnet50(pretrained=True)
 print(model)
 
-preprocess = transforms.Compose([
-  lambda x: x.convert('RGB'),
-  transforms.Resize((224, 224)),
-  transforms.ToTensor()
-])
-
 def runmodel(input):
   x = model.conv1(input)
   x = model.bn1(x)
@@ -35,13 +29,16 @@ def runmodel(input):
   x = model.maxpool(x)
   x = model.layer1(x)
   x = model.layer2(x)
+  x = model.layer3(x)
+  x = model.layer4(x)
   return model.avgpool(x)
 
 model.eval() # turn to test mode
 
-input = nn.Parameter(torch.rand(1, 3, 224, 224))
+mat = torch.randn(1, 3, 224, 224) / 100
+input = nn.Parameter(mat)
 
-optimizer = optim.Adagrad([input], lr=0.1)
+optimizer = optim.SGD([input], lr=0.01)
 loss_fn = nn.CrossEntropyLoss()
 
 for i in range(0, 100):
@@ -52,7 +49,7 @@ for i in range(0, 100):
     
     target = Variable(torch.ones(1, 2048, 1, 1))
     
-    loss = ((1 - output)**2).sum() # maybe *10
+    loss = ((1 - output)**2).sum()
     loss.backward()
     
     return loss
