@@ -1,9 +1,10 @@
 <template>
   <div id="wrapper">
     <main>
-      <Jutan    v-if="currentType == 'jutan'"></Jutan>
+      <!--<Jutan    v-if="currentType == 'jutan'"></Jutan>
       <Jutan2   v-if="currentType == 'jutan2'"></Jutan2>
-      <Kirakira v-if="currentType == 'kirakira'"></Kirakira>
+      <Kirakira v-if="currentType == 'kirakira'"></Kirakira>-->
+      <MyAutomata></MyAutomata>
     </main>
   </div>
 </template>
@@ -13,10 +14,11 @@
   import Kirakira from './Kirakira'
   import Jutan from './Jutan'
   import Jutan2 from './Jutan2'
+  import MyAutomata from './MyAutomata'
   import _ from 'lodash'
   export default {
     name: 'karaoke-main',
-    components: { Kirakira, Jutan, Jutan2 },
+    components: { Kirakira, Jutan, Jutan2, MyAutomata },
     data: function () {
       return {
         scenario: [],
